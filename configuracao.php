@@ -1,7 +1,7 @@
 <?php
 /**
  * ============================================================================
- * Arquivo de configuração do Sistema Minerva
+ * Arquivo de configuração do Sistema Ataque Divino
  * ============================================================================
  */
 
@@ -13,9 +13,9 @@ $perfil = 'dev';
 
 /**
  * Pasta do sistema no servidor. Se o servidor é acessado via
- * http://servidor.com/minerva, a variável deve conter '/minerva'.
+ * http://servidor.com/ataqueDivino, a variável deve conter '/ataqueDivino'.
  */
-$url = '/minerva';
+$url = '/ataqueDivino';
 
 /**
  * locale que deve ser usado para o sistema. Esta configuração não afeta
