@@ -47,8 +47,8 @@ $conexoes['ataqueDivino']['pass'] = 'fK1%lB7*';
  */
 $conexoes['dev'] = array();
 $conexoes['dev']['host'] = 'localhost';
-$conexoes['dev']['db'] = 'ataqueDivino';
-$conexoes['dev']['user'] = 'ataqueDivino';
+$conexoes['dev']['db'] = 'ataquedivino';
+$conexoes['dev']['user'] = 'ataquedivino';
 $conexoes['dev']['pass'] = 'zj7dqvKhe4NtG88X';
 
 setlocale(LC_ALL, 'pt_BR.utf8');
