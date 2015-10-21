@@ -35362,9 +35362,3 @@ html.ios body {
 ::-webkit-scrollbar-thumb:horizontal {
     background-color: #767676;
 }
-
-/* Cor do indicador de rolagem - ao passar o mouse */
-::-webkit-scrollbar-thumb:vertical:hover,
-::-webkit-scrollbar-thumb:horizontal:hover {
-    background-color: yellow;
-}
