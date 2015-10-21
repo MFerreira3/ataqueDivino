@@ -46,7 +46,7 @@ $conexoes['ataqueDivino']['pass'] = 'fK1%lB7*';
  * Conexão com o banco de desenvolvimento (development).
  */
 $conexoes['dev'] = array();
-$conexoes['dev']['host'] = 'localhost';
+$conexoes['dev']['host'] = '127.0.0.1';
 $conexoes['dev']['db'] = 'ataquedivino';
 $conexoes['dev']['user'] = 'ataquedivino';
 $conexoes['dev']['pass'] = 'zj7dqvKhe4NtG88X';
