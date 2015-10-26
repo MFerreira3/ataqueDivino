@@ -1,9 +1,17 @@
 <?php
-header ('Content-type: text/html; charset=UTF-8');
+header('Content-type: text/html; charset=UTF-8');
 
 require_once __DIR__ . '/autoload.php';
+require_once __DIR__ . '/debug.php';
 
-$barraLateralCor = array('Red' => rand(0, 255), 'Green' => rand(0, 255), 'Blue' => rand(0, 255));
+# Definições padrões
+if (!isset($_SESSION)) {
+	session_id($def_sessionName); // Dá um id único para a sessão.
+	session_name($def_sessionName); // Dá um nome único para a sessão.
+	session_start();
+}
+
+$def_barraLateralCor = array('Red' => rand(0, 255), 'Green' => rand(0, 255), 'Blue' => rand(0, 255));
 ?>
 
 <html>
@@ -19,7 +27,7 @@ $barraLateralCor = array('Red' => rand(0, 255), 'Green' => rand(0, 255), 'Blue' 
 		/* Cor do indicador de rolagem - ao passar o mouse */
 		::-webkit-scrollbar-thumb:vertical:hover,
 		::-webkit-scrollbar-thumb:horizontal:hover {
-		    background-color: rgb(<?= $barraLateralCor['Red'] . ", " . $barraLateralCor['Green'] . ", " . $barraLateralCor['Blue'] ?>);
+		    background-color: rgb(<?= $def_barraLateralCor['Red'] . ", " . $def_barraLateralCor['Green'] . ", " . $def_barraLateralCor['Blue'] ?>);
 		}
 	</style>
 
