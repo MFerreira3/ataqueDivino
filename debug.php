@@ -15,7 +15,7 @@ function debug(&$valor, $popup = false, $exit = false, $titulo = null) {
 	global $perfil;
 	$header = "";
 
-	if ($perfil != 'minerva') {
+	if ($perfil != 'ataqueDivino') {
 		// Define o texto de acordo com o tipo de dado.
 		if (isset($valor)) {
 			if (is_array($valor)) {
