@@ -1,6 +1,8 @@
 <?php
 header ('Content-type: text/html; charset=UTF-8');
 
+require_once __DIR__ . '/autoload.php';
+
 $barraLateralCor = array('Red' => rand(0, 255), 'Green' => rand(0, 255), 'Blue' => rand(0, 255));
 ?>
 
