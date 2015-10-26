@@ -1,5 +1,4 @@
 <?php
-require_once "autoload.php";
 require_once "definicoes.php";
 
 $numeroImagem = rand(1, 6); // Número aleatório utilizado para definir a imagem de fundo.
