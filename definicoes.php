@@ -11,9 +11,11 @@ if (!isset($_SESSION)) {
 	session_start();
 }
 
-$def_barraLateralCor = array('Red' => rand(0, 255), 'Green' => rand(0, 255), 'Blue' => rand(0, 255));
-?>
+$def_barraLateralCor = array('Red' => rand(0, 255), 'Green' => rand(0, 255), 'Blue' => rand(0, 255)); // Define uma cor aleatória para cada acesso na página.
+$def_imprimirHTML = isset($def_imprimirHTML) ? $def_imprimirHTML : true; // Define se este arquivo imprimirá o conteúdo HTML que modela o padrão de páginas.
 
+if ($def_imprimirHTML) {
+?>
 <html>
 	<head>
 	<meta name="viewport" content="width=device-width, initial-scale=0.5, user-scalable=no">
@@ -34,3 +36,7 @@ $def_barraLateralCor = array('Red' => rand(0, 255), 'Green' => rand(0, 255), 'Bl
 	<script src="/ataqueDivino/js/jquery.js"></script>
 	<script src="/ataqueDivino/Semantic/dist/semantic.js"></script>
 	</head>
+
+<?php
+}
+?>
