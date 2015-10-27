@@ -24,10 +24,10 @@ $numeroImagem = rand(1, 6); // Número aleatório utilizado para definir a image
 				<i class="sign in icon"></i>
 				Login
 			</button>
-			<button class="ui button">
+			<a href="autenticacao/novoUsuario.php" class="ui button">
 				<i class="add user icon"></i>
 				Registrar
-			</button>
+			</a>
 		</div>
 
 		<div class="ui mini input focus">
