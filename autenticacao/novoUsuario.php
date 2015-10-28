@@ -7,8 +7,10 @@ if (isset($_SESSION['usuario']['logado']) && $_SESSION['usuario']['logado']) {
 	die();
 }
 
-$numeroImagem = rand(1, 	6); // Número aleatório utilizado para definir a imagem de fundo.
-$anoAtual = date('Y');
+$numeroImagem = rand(1, 	6); // Número aleatório utilizado para definir a imagem de fundo.;
+$anoAtual = date('Y');  //Váriavel para receber ano do servidor;
+$mesAtual = date('m'); //Váriavel para receber o mes do servidor;
+$diaAtual = date('d'); //Váriavel para receber o dia do servidor;
 ?>
 
 <style>
@@ -33,38 +35,38 @@ body {
 		<div class="ui inverted form">
 			<form name="formularioRegistro" id="formularioRegistro">
 				<div class="two fields">
-					<div class="field">
+					<div class="field" id="fieldUsuario">
 						<label for="user">Usuário</label>
-						<input placeholder="Usuário" name="usuario" id="usuario" type="text">
+						<input placeholder="Usuário" name="usuario" id="usuario" type="text" data-content="Preencha o campo com no máximo 25 caracteres" data-position="left center">
 					</div>
 
-					<div class="field">
+					<div class="field" id="fieldEmail">
 						<label for="email">E-mail</label>
-						<input placeholder="E-mail" name="email" id="email" type="text">
+						<input placeholder="E-mail" name="email" id="email" type="text" data-content="Preencha o campo com um endereço válido" data-position="right center">
 					</div>
 				</div>
 				<br />
 				<div class="two fields">
-					<div class="field">
+					<div class="field" id="fieldSenha">
 						<label for="senha">Senha</label>
-						<input placeholder="Senha" name="senha" id="senha" type="password">
+						<input placeholder="Senha" name="senha" id="senha" type="password" data-content="Digite uma senha" data-position="left center">
 					</div>
 
-					<div class="field">
+					<div class="field" id="fieldConfirmarSenha">
 						<label for="confirmarSenha">Confirmar Senha</label>
-						<input placeholder="Repita senha" name="confirmarSenha" id="confirmarSenha" type="password">
+						<input placeholder="Repita senha" name="confirmarSenha" id="confirmarSenha" type="password" data-content="As senhas digitadas não coincidem" data-position="right center">
 					</div>
 				</div>
-				<h5>Data de Nascimento:</h5>
+				<h5>Data de Nascimento: (Mínimo de 13 anos)</h5>
 				<div class="three fields">
-					<div class="field">
+					<div class="field" id="fieldDiaNascimento">
 						<label for="diaNascimento">Dia</label>
-						<input placeholder="Dia" name="diaNascimento" id="diaNascimento" type="number">
+						<input placeholder="Dia" name="diaNascimento" id="diaNascimento" type="number" data-content="Preencha o campo com uma data válida" data-position="left center">
 					</div>
 
-					<div class="field">
+					<div class="field" id="fieldMesNascimento">
 						<label for="mesNascimento">Mês</label>
-						<select class="ui fluid search dropdown" name="mesNascimento" id="mesNascimento" placeholder="Mês">
+						<select class="ui fluid search dropdown" name="mesNascimento" id="mesNascimento" placeholder="Mês" data-content="Escolha um mês válido" data-position="bottom center">
 							<?php
 							for ($numeroMes = 1; $numeroMes <= 12; $numeroMes++) {
 								echo '<option value="' . $numeroMes . '">' . mesNome($numeroMes)  . '</option>';
@@ -73,9 +75,9 @@ body {
 						</select>
 					</div>
 
-					<div class="field">
+					<div class="field" id="fieldAnoNascimento">
 						<label for="anoNascimento">Ano</label>
-						<input placeholder="Ano" name="anoNascimento"  id="anoNascimento" type="number">
+						<input placeholder="Ano" name="anoNascimento"  id="anoNascimento" type="number" data-content="Preencha o campo com um ano válido" data-position="right center">
 					</div>
 				</div>
 				<div class="ui divider"></div>
@@ -92,58 +94,104 @@ body {
 <script>
 $(document).ready(function() {
 	$('#botaoSubmit').click(function() {
+		//Setando variaveis de verificação de campos;
 		camposValidos = true;
+		anoAtual = <?= $anoAtual ?>;
+		mesAtual = <?= $mesAtual ?>;
+		diaAtual = <?= $diaAtual ?>;
+		menosAnoAtual = anoAtual - 100;
+		diasMesMaximo = mesDiaMaximo($('#mesNascimento').val());
 
-		if (!$('#usuario').val()) {
-			alert('Preencha o campo de usuário');
-			camposValidos = false;
-		} else if ($('#usuario').val().length > 25) {
-			alert('Limite de 25 caracteres no campo de usuário');
+		//Resetando popup de campos, fazendo com que não apareçam novamente caso tenham sido preenchidos ou reapareçam caso apagados;
+		//Adicionando classes error nos campos que não passarem pela pré validação;
+		$('#fieldUsuario, #fieldEmail, #fieldSenha, #fieldConfirmarSenha, #fieldDiaNascimento, #fieldMesNascimento, #fieldAnoNascimento').removeClass('error');
+		$('#usuario, #Email, #senha, #confirmarSenha, #diaNascimento, #mesNascimento, #anoNascimento').popup('hide');
+		$('#usuario, #Email, #senha, #confirmarSenha, #diaNascimento, #mesNascimento, #anoNascimento').popup('destroy');
+
+		//Pré-validação do campo e-mail, usando regex para que os campos possuam ao menos um "@ algumacoisa.com/.br/.uk/.jp etc";
+		function validarEmail(email) {
+			regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			return regex.test(email);
+		}
+
+		//Pre-validação de idade com um mínimo de 13 anos para poder validar;
+		function validarIdade(diaNascimento, mesNascimento, anoNascimento) {
+			if (anoNascimento > anoAtual - 13) {
+				return false;
+			} else if (anoNascimento < anoAtual - 13) {
+				return true;
+			}
+
+			if (mesNascimento > mesAtual) {
+				return false;
+			} else if (mesNascimento < mesAtual) {
+				return true;
+			}
+
+			if (diaNascimento > diaAtual) {
+				return false;
+			}
+
+			return true;
+		}
+
+		//Pré-validação dos campos, exibe alertas caso não passem pela pré-validação;
+		if (!$('#usuario').val() || $('#usuario').val().length > 25) {
+			$('#usuario').popup({on: 'focus'});
+			$('#usuario').popup('show');
+			$('#fieldUsuario').addClass('error');
 			camposValidos = false;
 		}
 
-		if (!$('#email').val()) {
-			alert('Preencha o campo de e-mail');
-			camposValidos = false;
-		} else if ($('#email').val().length > 100) {
-			alert('Limite de 100 caracteres no campo de e-mail');
+		if (!$('#email').val() || $('#email').val().length > 100 || !validarEmail($('#email').val())) {
+			$('#email').popup({on: 'focus'});
+			$('#email').popup('show');
+			$('#fieldEmail').addClass('error');
 			camposValidos = false;
 		}
 
 		if (!$('#senha').val()) {
-			alert('Preencha o campo de senha');
+			$('#senha').popup({on: 'focus'});
+			$('#senha').popup('show');
+			$('#fieldSenha').addClass('error');
 			camposValidos = false;
 		}
 
-		if (!$('#confirmarSenha').val()) {
-			alert('Confirme sua senha');
-			camposValidos = false;
-		} else if ($('#confirmarSenha').val() != $('#senha').val()) {
-			alert('Digite as senhas exatamente iguais');
-			camposValidos = false;
-		}
-
-		if (!$('#diaNascimento').val()) {
-			alert('Preencha o campo de dia');
-			camposValidos = false;
-		} else if ($('#diaNascimento').val() > 31) {
-			alert($('#diaNascimento').val() + ' não é uma data válida');
+		if (!$('#confirmarSenha').val() || $('#confirmarSenha').val() != $('#senha').val()) {
+			$('#confirmarSenha').popup({on: 'focus'});
+			$('#confirmarSenha').popup('show');
+			$('#fieldConfirmarSenha').addClass('error');
 			camposValidos = false;
 		}
 
-		if (!$('#anoNascimento').val()) {
-			alert('Preencha o campo de ano');
-			camposValidos = false;
-		} else if ($('#anoNascimento').val() > <?= $anoAtual ?>) {
-			alert($('#anoNascimento').val() + ' não é um ano válido');
+		if (!$('#anoNascimento').val() || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val()) || $('#anoNascimento').val() <= menosAnoAtual) {
+			$('#anoNascimento').popup({on: 'focus'});
+			$('#anoNascimento').popup('show');
+			$('#fieldAnoNascimento').addClass('error');
 			camposValidos = false;
 		}
 
-		if (camposValidos == true) {
+		if (!$('#mesNascimento') || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val())) {
+			$('#mesNascimento').popup({on: 'focus'});
+			$('#mesNascimento').popup('show');
+			$('#fieldMesNascimento').addClass('error');
+			camposValidos = false;
+		}
+
+		if (!$('#diaNascimento').val() || $('#diaNascimento').val() > diasMesMaximo || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val())) {
+			$('#diaNascimento').popup({on: 'focus'});
+			$('#diaNascimento').popup('show');
+			$('#fieldDiaNascimento').addClass('error');
+			camposValidos = false;
+		}
+
+		//Envia os dados para a validação;
+		if (camposValidos) {
 			enviarFormulario();
 		}
 	});
 
+	//Envia os dados para a página de validação e recebe os resultados WIP;
 	function enviarFormulario() {
 		dadosFormulario = $('#formularioRegistro').serialize();
 		$.post('validarRegistro.php', dadosFormulario, function(resultado) {
