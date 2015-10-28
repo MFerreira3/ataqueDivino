@@ -3,6 +3,7 @@ require_once "definicoes.php";
 
 $numeroImagem = rand(1, 6); // Número aleatório utilizado para definir a imagem de fundo.
 ?>
+
 <body style="background: url('imagens/<?= $numeroImagem ?>.jpg') fixed; background-size: cover;">
 <div class="ui inverted segment" style="height: 99px; background: rgba(0, 0, 0, 0.75);">
 	<p style="font-size: 40; display: inline; float: left; margin-top: 4px">Ataque Divino</p>
