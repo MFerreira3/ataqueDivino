@@ -23,3 +23,26 @@ function mesNome($numeroMes) {
 	return $mes[$numeroMes];
 }
 ?>
+<script>
+/**
+ * Recebe um mês e retorna a quantia de dias máximo para tal;
+ * @param	integer	$numeroMes	Váriavel de valor para o mês;
+ * @return	integer	Retorna a quantia máxima de dias para o mês;
+ */
+function mesDiaMaximo(numeroMes) {
+	mesParOuImpar = numeroMes % 2;
+
+	if (numeroMes == 2) {
+		return 29;
+	} else if (mesParOuImpar == 0 && numeroMes < 7) {
+		return 30;
+	} else if (mesParOuImpar == 1 && numeroMes <=7) {
+		return 31;
+	} else if (mesParOuImpar == 0 && numeroMes > 7) {
+		return 31;
+	} else {
+		return 30;
+	}
+}
+
+</script>
