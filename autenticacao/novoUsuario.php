@@ -7,10 +7,7 @@ if (isset($_SESSION['usuario']['logado']) && $_SESSION['usuario']['logado']) {
 	die();
 }
 
-$numeroImagem = rand(1, 	6); // Número aleatório utilizado para definir a imagem de fundo.;
-$anoAtual = date('Y');  //Váriavel para receber ano do servidor;
-$mesAtual = date('m'); //Váriavel para receber o mes do servidor;
-$diaAtual = date('d'); //Váriavel para receber o dia do servidor;
+$numeroImagem = rand(1, 6); // Número aleatório utilizado para definir a imagem de fundo.;
 ?>
 
 <style>
@@ -96,9 +93,9 @@ $(document).ready(function() {
 	$('#botaoSubmit').click(function() {
 		//Setando variaveis de verificação de campos;
 		camposValidos = true;
-		anoAtual = <?= $anoAtual ?>;
-		mesAtual = <?= $mesAtual ?>;
-		diaAtual = <?= $diaAtual ?>;
+		anoAtual = <?= date('Y') ?>;
+		mesAtual = <?= date('m') ?>;
+		diaAtual = <?= date('d') ?>;
 		menosAnoAtual = anoAtual - 100;
 		diasMesMaximo = mesDiaMaximo($('#mesNascimento').val());
 
@@ -178,7 +175,7 @@ $(document).ready(function() {
 			camposValidos = false;
 		}
 
-		if (!$('#diaNascimento').val() || $('#diaNascimento').val() > diasMesMaximo || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val())) {
+		if (!$('#diaNascimento').val() || $('#diaNascimento').val() < 1 || $('#diaNascimento').val() > diasMesMaximo || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val())) {
 			$('#diaNascimento').popup({on: 'focus'});
 			$('#diaNascimento').popup('show');
 			$('#fieldDiaNascimento').addClass('error');
