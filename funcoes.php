@@ -23,6 +23,8 @@ function mesNome($numeroMes) {
 	return $mes[$numeroMes];
 }
 ?>
+
+<!--JavaScript-->
 <script>
 /**
  * Recebe um mês e retorna a quantia de dias máximo para tal;
