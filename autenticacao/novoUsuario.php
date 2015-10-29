@@ -87,7 +87,7 @@ body {
 	</div>
 </div>
 </body>
-<!--Parteu Ajax \o/-->
+<?php /* Parteu Ajax \o/ */ ?>
 <script>
 $(document).ready(function() {
 	$('#botaoSubmit').click(function() {
@@ -96,7 +96,6 @@ $(document).ready(function() {
 		anoAtual = <?= date('Y') ?>;
 		mesAtual = <?= date('m') ?>;
 		diaAtual = <?= date('d') ?>;
-		menosAnoAtual = anoAtual - 100;
 		diasMesMaximo = mesDiaMaximo($('#mesNascimento').val());
 
 		//Resetando popup de campos, fazendo com que não apareçam novamente caso tenham sido preenchidos ou reapareçam caso apagados;
@@ -161,7 +160,7 @@ $(document).ready(function() {
 			camposValidos = false;
 		}
 
-		if (!$('#anoNascimento').val() || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val()) || $('#anoNascimento').val() <= menosAnoAtual) {
+		if (!$('#anoNascimento').val() || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val()) || $('#anoNascimento').val() <= anoAtual - 100) {
 			$('#anoNascimento').popup({on: 'focus'});
 			$('#anoNascimento').popup('show');
 			$('#fieldAnoNascimento').addClass('error');
