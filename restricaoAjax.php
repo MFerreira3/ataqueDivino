@@ -8,6 +8,6 @@ require_once __DIR__ . "/debug.php"; // Garante que a função exibirErro esteja
 $ajax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 $host = isset($_SERVER['HTTP_REFERER']) ? strpos($_SERVER['HTTP_REFERER'], getenv('HTTP_HOST')) : "";
 if(!$ajax || $host === false) {
-	exibirErro('Acesso restrito');
+	exibirErro('Acesso restrito', true);
 }
 ?>
