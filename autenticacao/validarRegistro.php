@@ -27,7 +27,7 @@ Datas de Nascimento = Tão preenchidas? N tem caractere retardado? N é menor q 
 
 reCAPTCHA = Ta preenchido? Validado pelo Google?
  */
-$def_imprimirHTML = true;
+$def_imprimirHTML = false;
 require_once "../definicoes.php";
 require_once "../restricaoAjax.php";
 
@@ -48,7 +48,7 @@ if (empty($_POST['usuario']) || !is_string($_POST['usuario'])) {
 	retornarResultado('c1');
 } else if (strlen($_POST['usuario']) < 3) {
 	retornarResultado('c2');
-} else if (preg_replace("/[^a-zA-Z0-9\/_-]/", "", $_SESSION['usuario']) !== $_SESSION['usuario']) {
+} else if (preg_replace("/[^a-zA-Z0-9\/_-]/", "", $_POST['usuario']) !== $_POST['usuario']) {
 	retornarResultado('c3');
 }
 
