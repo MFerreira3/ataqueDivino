@@ -7,7 +7,9 @@ if (isset($_SESSION['usuario']['logado']) && $_SESSION['usuario']['logado']) {
 	die();
 }
 
-$numeroImagem = rand(1, 6); // Número aleatório utilizado para definir a imagem de fundo.;
+const SITE_KEY = "6LchDBATAAAAAAa0ChytPll41ArGnhdsdL4IN_-t"; //Constante do site para implementação do reCAPTCHA;
+
+$numeroImagem = rand(1, 6); // Número aleatório utilizado para definir a imagem de fundo;
 ?>
 
 <style>
@@ -31,6 +33,7 @@ body {
 	<div class="column six wide form-holder" id="areaLogin">
 		<div class="ui inverted form">
 			<form name="formularioRegistro" id="formularioRegistro">
+				<input type="hidden" name="g-response" id="grecaptcha-response" />
 				<div class="two fields">
 					<div class="field" id="fieldUsuario">
 						<label for="user">Usuário</label>
@@ -46,12 +49,12 @@ body {
 				<div class="two fields">
 					<div class="field" id="fieldSenha">
 						<label for="senha">Senha</label>
-						<input placeholder="Senha" name="senha" id="senha" type="password" data-content="Digite uma senha" data-position="left center">
+						<input placeholder="Senha" name="senha" id="senha" type="password" data-content="Digite uma senha de no mínimo 8 caracteres" data-position="left center">
 					</div>
 
 					<div class="field" id="fieldConfirmarSenha">
 						<label for="confirmarSenha">Confirmar Senha</label>
-						<input placeholder="Repita senha" name="confirmarSenha" id="confirmarSenha" type="password" data-content="As senhas digitadas não coincidem" data-position="right center">
+						<input placeholder="Repita senha" id="confirmarSenha" type="password" data-content="As senhas digitadas não coincidem" data-position="right center">
 					</div>
 				</div>
 				<h5>Data de Nascimento: (Mínimo de 13 anos)</h5>
@@ -77,8 +80,10 @@ body {
 						<input placeholder="Ano" name="anoNascimento"  id="anoNascimento" type="number" data-content="Preencha o campo com um ano válido" data-position="right center">
 					</div>
 				</div>
-				<div class="ui divider"></div>
 			</form>
+			<div class="ui divider"></div>
+			<div class="g-recaptcha" data-sitekey="<?= SITE_KEY ?>" id="reCAPTCHA" data-content="Faça a verificação de reCAPTCHA" data-position="left center"></div>
+			<br />
 			<button class="ui violet  labeled icon button" id="botaoSubmit">
 				<i class="add user icon"></i>
 				Registrar
@@ -87,22 +92,27 @@ body {
 	</div>
 </div>
 </body>
+
 <?php /* Parteu Ajax \o/ */ ?>
+
+<script src='https://www.google.com/recaptcha/api.js'></script>
 <script>
 $(document).ready(function() {
 	$('#botaoSubmit').click(function() {
 		//Setando variaveis de verificação de campos;
 		camposValidos = true;
-		anoAtual = <?= date('Y') ?>;
-		mesAtual = <?= date('m') ?>;
-		diaAtual = <?= date('d') ?>;
-		diasMesMaximo = mesDiaMaximo($('#mesNascimento').val());
+		anoAtual = <?= date('Y') ?>; //Váriavel de ano do servidor;
+		mesAtual = <?= date('m') ?>; //Váriavel de mês do servidor;
+		diaAtual = <?= date('d') ?>; //Váriavel de dia do servidor;
+		diasMesMaximo = mesDiaMaximo($('#mesNascimento').val()); //Chamando a função que determina a quantia máxima de dias que certo mês pode ter;
+		grecaptchaResponse = grecaptcha.getResponse(); //Obtendo a resposta do reCAPTCHA;
+		$('#grecaptcha-response').val(grecaptchaResponse); //Guarda a validação do reCAPTCHA para envio via formulario;
 
 		//Resetando popup de campos, fazendo com que não apareçam novamente caso tenham sido preenchidos ou reapareçam caso apagados;
 		//Adicionando classes error nos campos que não passarem pela pré validação;
 		$('#fieldUsuario, #fieldEmail, #fieldSenha, #fieldConfirmarSenha, #fieldDiaNascimento, #fieldMesNascimento, #fieldAnoNascimento').removeClass('error');
-		$('#usuario, #Email, #senha, #confirmarSenha, #diaNascimento, #mesNascimento, #anoNascimento').popup('hide');
-		$('#usuario, #Email, #senha, #confirmarSenha, #diaNascimento, #mesNascimento, #anoNascimento').popup('destroy');
+		$('#usuario, #Email, #senha, #confirmarSenha, #diaNascimento, #mesNascimento, #anoNascimento, #reCAPTCHA').popup('hide');
+		$('#usuario, #Email, #senha, #confirmarSenha, #diaNascimento, #mesNascimento, #anoNascimento, #reCAPTCHA').popup('destroy');
 
 		//Pré-validação do campo e-mail, usando regex para que os campos possuam ao menos um "@ algumacoisa.com/.br/.uk/.jp etc";
 		function validarEmail(email) {
@@ -146,7 +156,7 @@ $(document).ready(function() {
 			camposValidos = false;
 		}
 
-		if (!$('#senha').val()) {
+		if (!$('#senha').val() || $('#senha').val().length < 8) {
 			$('#senha').popup({on: 'focus'});
 			$('#senha').popup('show');
 			$('#fieldSenha').addClass('error');
@@ -181,6 +191,12 @@ $(document).ready(function() {
 			camposValidos = false;
 		}
 
+		if (!grecaptchaResponse) {
+			$('#reCAPTCHA').popup({on: 'focus'});
+			$('#reCAPTCHA').popup('show');
+			camposValidos = false;
+		}
+
 		//Envia os dados para a validação;
 		if (camposValidos) {
 			enviarFormulario();
@@ -191,7 +207,7 @@ $(document).ready(function() {
 	function enviarFormulario() {
 		dadosFormulario = $('#formularioRegistro').serialize();
 		$.post('validarRegistro.php', dadosFormulario, function(resultado) {
-			alert(resultado);
+			alert(dadosFormulario);
 		});
 	}
 
