@@ -82,6 +82,50 @@ END;
 }
 
 /**
+ * Função padrão para a exibição de erros no Ataque Divino.
+ * Abre um modal com uma mensagem definida. Opcionalmente
+ * a função poderá parar a execução do código.
+ * @param  string  $mensagem          Mensagem de erro a ser exibida
+ * @param  boolean $finalizarExecucao Define se é um erro comum ou
+ *                                    erro fatal.
+ */
+function exibirErro($mensagem = "", $finalizarExecucao = false) {
+	echo <<<END
+			<script>
+			$(document).ready(function() {
+				$('#modalErro').modal({
+					closable: false,
+					onDeny: function(){
+						history.back(1);
+					}
+				});
+				$('#modalErro').modal('show');
+			});
+			</script>
+
+			<div class="ui modal large" id="modalErro">
+				<div class="header">
+					<i class="icon Bug"></i> The developers took an arrow to the knee
+				</div>
+				<div class="content">
+					<div class="description">
+						Error message: <br /><b>$mensagem</b>
+					</div>
+				</div>
+				<div class="actions">
+					<div class="ui black deny button">
+						<i class="icon Reply"></i> Voltar para a página anterior
+					</div>
+				</div>
+			</div>
+END;
+
+	if ($finalizarExecucao) {
+		die($mensagem);
+	}
+}
+
+/**
 * Retorna uma notificação específica para evitar a repetição de texto
 * no código
 * @param String          $indice Identificador da notificação.
@@ -90,6 +134,9 @@ END;
 function notificacoes($indice) {
 
 # Erros
+
+// Sessão de erros genéricos.
+$mensagem['g0'] = "Operação bloqueada pelo servidor.";
 
 // Erros especiais.
 $mensagem['json'] = json_last_error_msg();
