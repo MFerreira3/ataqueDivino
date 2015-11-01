@@ -40,6 +40,7 @@ if (!empty($_SESSION['usuario'])) {
 * 1. usuario não foi preenchido ou não é string?
 * 2. usuario ultrapassa o limite de caracteres
 * 3. usuario não contém caracteres suficiente
+* 4. usuario não contém caracteres inválidos
 */
 if (empty($_POST['usuario']) || !is_string($_POST['usuario'])) {
 	retornarResultado('c0');
@@ -48,9 +49,11 @@ if (empty($_POST['usuario']) || !is_string($_POST['usuario'])) {
 } else if (strlen($_POST['usuario']) < 3) {
 	retornarResultado('c2');
 } else if (preg_replace("/[^a-zA-Z0-9\/_-]/", "", $_SESSION['usuario']) !== $_SESSION['usuario']) {
-	# code...
+	retornarResultado('c3');
 }
 
+
+retornarResultado(0);
 
 function retornarResultado($resultado = 0) {
 	$retorno = array('resultado' => $resultado);
