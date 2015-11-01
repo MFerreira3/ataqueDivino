@@ -82,7 +82,7 @@ body {
 				</div>
 			</form>
 			<div class="ui divider"></div>
-			<div class="g-recaptcha" data-sitekey="<?= SITE_KEY ?>" id="reCAPTCHA" data-content="Faça a verificação de reCAPTCHA" data-position="left center"></div>
+			<div class="g-recaptcha" data-sitekey="<?= SITE_KEY ?>" id="reCAPTCHA" data-theme="dark" data-content="Faça a verificação de reCAPTCHA" data-position="left center"></div>
 			<br />
 			<button class="ui violet  labeled icon button" id="botaoSubmit">
 				<i class="add user icon"></i>
@@ -207,7 +207,7 @@ $(document).ready(function() {
 	function enviarFormulario() {
 		dadosFormulario = $('#formularioRegistro').serialize();
 		$.post('validarRegistro.php', dadosFormulario, function(resultado) {
-			alert(dadosFormulario);
+			alert(resultado);
 		});
 	}
 
