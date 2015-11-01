@@ -135,8 +135,15 @@ function notificacoes($indice) {
 
 # Erros
 
-// Sessão de erros genéricos.
-$mensagem['g0'] = "Operação bloqueada pelo servidor.";
+// Sessão de criação de novos usuários (C).
+$mensagem['c0'] = "Nome de usuário inválido";
+$mensagem['c1'] = "O nome de usuário excede o número máximo de caracteres permitido";
+$mensagem['c2'] = "O nome de usuário não contém a quantidade mínima de caracteres";
+$mensagem['c3'] = "O nome de usuário contém caracteres inválidos";
+
+
+// Sessão de erros genéricos (G).
+$mensagem['g0'] = "Operação bloqueada pelo servidor";
 
 // Erros especiais.
 $mensagem['json'] = json_last_error_msg();
