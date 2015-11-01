@@ -37,7 +37,7 @@ body {
 				<div class="two fields">
 					<div class="field" id="fieldUsuario">
 						<label for="user">Usuário</label>
-						<input placeholder="Usuário" name="usuario" id="usuario" type="text" data-content="Preencha o campo com no máximo 25 caracteres" data-position="left center">
+						<input placeholder="Usuário" name="usuario" id="usuario" type="text" data-content="Preencha o campo com no mínimo 3 caracteres e no máximo 25 caracteres" data-position="left center">
 					</div>
 
 					<div class="field" id="fieldEmail">
@@ -142,7 +142,7 @@ $(document).ready(function() {
 		}
 
 		//Pré-validação dos campos, exibe alertas caso não passem pela pré-validação;
-		if (!$('#usuario').val() || $('#usuario').val().length > 25) {
+		if (!$('#usuario').val() || $('#usuario').val().length > 25 || $('#usuario').val().length < 3) {
 			$('#usuario').popup({on: 'focus'});
 			$('#usuario').popup('show');
 			$('#fieldUsuario').addClass('error');
