@@ -57,6 +57,7 @@ body {
 						<input placeholder="Repita senha" id="confirmarSenha" type="password" data-position="right center">
 					</div>
 				</div>
+
 				<h5>Data de Nascimento: (Mínimo de 13 anos)</h5>
 				<div class="three fields">
 					<div class="field" id="fieldDiaNascimento">
@@ -84,6 +85,7 @@ body {
 			<div class="ui divider"></div>
 			<div class="g-recaptcha" data-sitekey="<?= SITE_KEY ?>" id="reCAPTCHA" data-theme="dark" data-content="Faça a verificação de reCAPTCHA" data-position="left center"></div>
 			<br />
+
 			<button class="ui violet  labeled icon button" id="botaoSubmit">
 				<i class="add user icon"></i>
 				Registrar
@@ -102,15 +104,16 @@ $(document).ready(function() {
 		if (!$('#botaoSubmit').hasClass('disabled') || !$('#botaoSubmit').hasClass('loading')) {
 			$('#botaoSubmit').addClass('loading');
 			$('#botaoSubmit').addClass('disabled');
-			//Setando variaveis de verificação de campos;
-			camposValidos = new Array();
-			anoAtual = <?= date('Y') ?>; //Váriavel de ano do servidor;
-			mesAtual = <?= date('m') ?>; //Váriavel de mês do servidor;
-			diaAtual = <?= date('d') ?>; //Váriavel de dia do servidor;
-			diasMesMaximo = mesDiaMaximo($('#mesNascimento').val()); //Chamando a função que determina a quantia máxima de dias que certo mês pode ter;
-			grecaptchaResponse = grecaptcha.getResponse(); //Obtendo a resposta do reCAPTCHA;
-			$('#grecaptcha-response').val(grecaptchaResponse); //Guarda a validação do reCAPTCHA para envio via formulario;
-			camposNomes =  [ //Dá nome para todos os campos;
+			// Setando variáveis de verificação de campos.
+			camposInvalidos = new Array();
+			anoAtual = <?= date('Y') ?>; // Variável de ano do servidor.
+			mesAtual = <?= date('m') ?>; // Variável de mês do servidor.
+			diaAtual = <?= date('d') ?>; // Variável de dia do servidor.
+			diasMesMaximo = mesDiaMaximo($('#mesNascimento').val()); // Chamando a função que determina a quantia máxima de dias que certo mês pode ter.
+
+			grecaptchaResponse = grecaptcha.getResponse(); // Obtendo a resposta do reCAPTCHA.
+			$('#grecaptcha-response').val(grecaptchaResponse); // Guarda a validação do reCAPTCHA para envio via formulário;
+			camposNomes =  [ // Dá nome para todos os campos;
 				"usuario",
 				"email",
 				"senha",
@@ -121,19 +124,19 @@ $(document).ready(function() {
 				"reCAPTCHA"
 			];
 
-			//Resetando popup de campos, fazendo com que não apareçam novamente caso tenham sido preenchidos ou reapareçam caso apagados;
-			//Adicionando classes error nos campos que não passarem pela pré validação;
+			// Resetando popup de campos, fazendo com que não apareçam novamente caso tenham sido preenchidos ou reapareçam caso apagados.
+			// Adicionando classe error nos campos que não passarem pela pré-validação.
 			$('#fieldUsuario, #fieldEmail, #fieldSenha, #fieldConfirmarSenha, #fieldDiaNascimento, #fieldMesNascimento, #fieldAnoNascimento').removeClass('error');
 			$('#usuario, #Email, #senha, #confirmarSenha, #diaNascimento, #mesNascimento, #anoNascimento, #reCAPTCHA').popup('hide');
 			$('#usuario, #Email, #senha, #confirmarSenha, #diaNascimento, #mesNascimento, #anoNascimento, #reCAPTCHA').popup('destroy');
 
-			//Pré-validação do campo e-mail, usando regex para que os campos possuam ao menos um "@ algumacoisa.com/.br/.uk/.jp etc";
+			// Pré-validação do campo e-mail, usando regex para que os campos possuam ao menos um "@ algumacoisa.com/.br/.uk/.jp etc".
 			function validarEmail(email) {
 				regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 				return regex.test(email);
 			}
 
-			//Pre-validação de idade com um mínimo de 13 anos para poder validar;
+			// Pré-validação de idade com um mínimo de 13 anos para ser aceito.
 			function validarIdade(diaNascimento, mesNascimento, anoNascimento) {
 				if (anoNascimento > anoAtual - 13) {
 					return false;
@@ -154,84 +157,84 @@ $(document).ready(function() {
 				return true;
 			}
 
-			//Pré-validação dos campos, exibe alertas caso não passem pela pré-validação;
+			// Pré-validação dos campos, exibe alertas caso não passem pela pré-validação;
 			if (!$('#usuario').val()) {
 				$('#usuario').attr('data-content', "Preencha o campo de usuário");
 				$('#fieldUsuario').addClass('error');
-				camposValidos[0] = true;
+				camposInvalidos[0] = true;
 			} else if ($('#usuario').val().length > 25) {
 				$('#usuario').attr('data-content', "Preencha o campo de usuário com no máximo 25 caracteres");
 				$('#fieldUsuario').addClass('error');
-				camposValidos[0] = true;
+				camposInvalidos[0] = true;
 			} else if ($('#usuario').val().length < 3) {
 				$('#usuario').attr('data-content', "Preencha o campo de usuário com no mínimo 3 caracteres");
 				$('#fieldUsuario').addClass('error');
-				camposValidos[0] = true;
+				camposInvalidos[0] = true;
 			}
 
 			if (!$('#email').val()) {
 				$('#email').attr('data-content', "Preencha o campo de E-mail");
 				$('#fieldEmail').addClass('error');
-				camposValidos[1] = true;
+				camposInvalidos[1] = true;
 			} else if ($('#email').val().length > 100) {
 				$('#email').attr('data-content', "Preencha o campo de E-mail com no máximo 100 caracteres");
 				$('#fieldEmail').addClass('error');
-				camposValidos[1] = true;
+				camposInvalidos[1] = true;
 			} else if (!validarEmail($('#email').val())) {
 				$('#email').attr('data-content', "Preencha o campo com um E-mail válido");
 				$('#fieldEmail').addClass('error');
-				camposValidos[1] = true;
+				camposInvalidos[1] = true;
 			}
 
 			if (!$('#senha').val()) {
 				$('#senha').attr('data-content', "Preencha o campo de senha");
 				$('#fieldSenha').addClass('error');
-				camposValidos[2] = true;
+				camposInvalidos[2] = true;
 			} else if ($('#senha').val().length < 8) {
 				$('#senha').attr('data-content', "Preencha o campo de senha com no mínimo 8 caracteres");
 				$('#fieldSenha').addClass('error');
-				camposValidos[2] = true;
+				camposInvalidos[2] = true;
 			}
 
 			if (!$('#confirmarSenha').val()) {
 				$('#confirmarSenha').attr('data-content', "Repita sua senha");
 				$('#fieldConfirmarSenha').addClass('error');
-				camposValidos[3] = true;
+				camposInvalidos[3] = true;
 			} else if ($('#confirmarSenha').val() != $('#senha').val()) {
 				$('#confirmarSenha').attr('data-content', "As senhas digitadas não coincidem");
 				$('#fieldConfirmarSenha').addClass('error');
-				camposValidos[3] = true;
+				camposInvalidos[3] = true;
 			}
 
 			if (!$('#anoNascimento').val() || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val()) || $('#anoNascimento').val() <= anoAtual - 100) {
 				$('#fieldAnoNascimento').addClass('error');
-				camposValidos[4] = true;
+				camposInvalidos[4] = true;
 			}
 
 			if (!$('#mesNascimento') || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val())) {
 				$('#fieldMesNascimento').addClass('error');
-				camposValidos[5] = true;
+				camposInvalidos[5] = true;
 			}
 
 			if (!$('#diaNascimento').val() || $('#diaNascimento').val() < 1 || $('#diaNascimento').val() > diasMesMaximo || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val())) {
 				$('#fieldDiaNascimento').addClass('error');
-				camposValidos[6] = true;
+				camposInvalidos[6] = true;
 			}
 
 			if (!grecaptchaResponse) {
-				camposValidos[7] = true;
+				camposInvalidos[7] = true;
 			}
 
-			//Verifica quais campos foram setados como true, e adiciona o popup de erro para cada campo q deu erro;
+			// Verifica quais campos foram setados como true, e adiciona o popup de erro para cada campo que deu erro.
 			for (campos = 0; campos < 8; campos++) {
-				if (camposValidos[campos]) {
+				if (camposInvalidos[campos]) {
 					$('#' + camposNomes[campos]).popup({on: 'focus'});
 					$('#' + camposNomes[campos]).popup('show');
 				}
 			}
 
-			//Envia os dados para a validação;
-			if (camposValidos.length < 1) {
+			// Envia os dados para a validação.
+			if (camposInvalidos.length < 1) {
 				enviarFormulario();
 			} else {
 				$('#botaoSubmit').removeClass('loading');
@@ -240,22 +243,24 @@ $(document).ready(function() {
 		}
 	});
 
-	//Envia os dados para a página de validação e recebe os resultados WIP;
+	// WIP: Envia os dados para a página de validação e recebe os resultados.
 	function enviarFormulario() {
 		dadosFormulario = $('#formularioRegistro').serialize();
+
 		$.post('validarRegistro.php', dadosFormulario, function(resultado) {
 			$('#botaoSubmit').removeClass('loading');
 			alert(resultado);
+
 			if (resultado != 0) {
 				$('#botaoSubmit').removeClass('disabled');
 				return false;
 			}
-		}) .fail(function() {
-				alert("Tempo de conexão esgotado, tente novamente mais tarde");
-				$('#botaoSubmit').removeClass('loading');
-				$('#botaoSubmit').removeClass('disabled');
-				return false;
-			});
+		}).fail(function() {
+			alert("Tempo de conexão esgotado, tente novamente mais tarde");
+			$('#botaoSubmit').removeClass('loading');
+			$('#botaoSubmit').removeClass('disabled');
+			return false;
+		});
 	}
 });
 </script>
