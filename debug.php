@@ -136,14 +136,28 @@ function notificacoes($indice) {
 # Erros
 
 // Sessão de criação de novos usuários (C).
-$mensagem['c0'] = "Nome de usuário inválido";
-$mensagem['c1'] = "O nome de usuário excede o número máximo de caracteres permitido";
-$mensagem['c2'] = "O nome de usuário não contém a quantidade mínima de caracteres";
-$mensagem['c3'] = "O nome de usuário contém caracteres inválidos";
+$mensagem['c0a'] = "Nome de usuário inválido";
+$mensagem['c0b'] = "O nome de usuário excede o número máximo de caracteres permitido";
+$mensagem['c0c'] = "O nome de usuário não contém a quantidade mínima de caracteres";
+$mensagem['c0d'] = "O nome de usuário contém caracteres inválidos";
 
+$mensagem['c1a'] = "Nenhum e-mail foi especificado";
+$mensagem['c1b'] = "O e-mail excede o número máximo de caracteres permitido";
+
+$mensagem['c2a'] = "Nenhuma senha foi especificada";
+$mensagem['c2b'] = "A senha excede o número máximo de caracteres permitido";
+$mensagem['c2c'] = "A senha não contém a quantidade mínima de caracteres";
+$mensagem['c2d'] = "O nome de usuário contém caracteres inválidos";
+
+$mensagem['c3a'] = "Data incompleta";
+$mensagem['c3b'] = "Data invalida";
+$mensagem['c3c'] = "Idade insuficiente";
+
+$mensagem['c4a'] = "g-response não informado";
+$mensagem['c4b'] = "Conexão recusada pelo reCAPTCHA";
 
 // Sessão de erros genéricos (G).
-$mensagem['g0'] = "Operação bloqueada pelo servidor";
+$mensagem['g0a'] = "Operação bloqueada pelo servidor";
 
 // Erros especiais.
 $mensagem['json'] = json_last_error_msg();
