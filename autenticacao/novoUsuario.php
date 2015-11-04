@@ -37,24 +37,24 @@ body {
 				<div class="two fields">
 					<div class="field" id="fieldUsuario">
 						<label for="user">Usuário</label>
-						<input placeholder="Usuário" name="usuario" id="usuario" type="text" data-content="Preencha o campo com no mínimo 3 caracteres e no máximo 25 caracteres" data-position="left center">
+						<input placeholder="Usuário" name="usuario" id="usuario" type="text" data-position="left center">
 					</div>
 
 					<div class="field" id="fieldEmail">
 						<label for="email">E-mail</label>
-						<input placeholder="E-mail" name="email" id="email" type="text" data-content="Preencha o campo com um endereço válido" data-position="right center">
+						<input placeholder="E-mail" name="email" id="email" type="text" data-position="right center">
 					</div>
 				</div>
 				<br />
 				<div class="two fields">
 					<div class="field" id="fieldSenha">
 						<label for="senha">Senha</label>
-						<input placeholder="Senha" name="senha" id="senha" type="password" data-content="Digite uma senha de no mínimo 8 caracteres" data-position="left center">
+						<input placeholder="Senha" name="senha" id="senha" type="password" data-position="left center">
 					</div>
 
 					<div class="field" id="fieldConfirmarSenha">
 						<label for="confirmarSenha">Confirmar Senha</label>
-						<input placeholder="Repita senha" id="confirmarSenha" type="password" data-content="As senhas digitadas não coincidem" data-position="right center">
+						<input placeholder="Repita senha" id="confirmarSenha" type="password" data-position="right center">
 					</div>
 				</div>
 				<h5>Data de Nascimento: (Mínimo de 13 anos)</h5>
@@ -99,107 +99,144 @@ body {
 <script>
 $(document).ready(function() {
 	$('#botaoSubmit').click(function() {
-		//Setando variaveis de verificação de campos;
-		camposValidos = true;
-		anoAtual = <?= date('Y') ?>; //Váriavel de ano do servidor;
-		mesAtual = <?= date('m') ?>; //Váriavel de mês do servidor;
-		diaAtual = <?= date('d') ?>; //Váriavel de dia do servidor;
-		diasMesMaximo = mesDiaMaximo($('#mesNascimento').val()); //Chamando a função que determina a quantia máxima de dias que certo mês pode ter;
-		grecaptchaResponse = grecaptcha.getResponse(); //Obtendo a resposta do reCAPTCHA;
-		$('#grecaptcha-response').val(grecaptchaResponse); //Guarda a validação do reCAPTCHA para envio via formulario;
+		if (!$('#botaoSubmit').hasClass('disabled') || !$('#botaoSubmit').hasClass('loading')) {
+			$('#botaoSubmit').addClass('loading');
+			$('#botaoSubmit').addClass('disabled');
+			//Setando variaveis de verificação de campos;
+			camposValidos = new Array();
+			anoAtual = <?= date('Y') ?>; //Váriavel de ano do servidor;
+			mesAtual = <?= date('m') ?>; //Váriavel de mês do servidor;
+			diaAtual = <?= date('d') ?>; //Váriavel de dia do servidor;
+			diasMesMaximo = mesDiaMaximo($('#mesNascimento').val()); //Chamando a função que determina a quantia máxima de dias que certo mês pode ter;
+			grecaptchaResponse = grecaptcha.getResponse(); //Obtendo a resposta do reCAPTCHA;
+			$('#grecaptcha-response').val(grecaptchaResponse); //Guarda a validação do reCAPTCHA para envio via formulario;
+			camposNomes =  [ //Dá nome para todos os campos;
+				"usuario",
+				"email",
+				"senha",
+				"confirmarSenha",
+				"anoNascimento",
+				"mesNascimento",
+				"diaNascimento",
+				"reCAPTCHA"
+			];
 
-		//Resetando popup de campos, fazendo com que não apareçam novamente caso tenham sido preenchidos ou reapareçam caso apagados;
-		//Adicionando classes error nos campos que não passarem pela pré validação;
-		$('#fieldUsuario, #fieldEmail, #fieldSenha, #fieldConfirmarSenha, #fieldDiaNascimento, #fieldMesNascimento, #fieldAnoNascimento').removeClass('error');
-		$('#usuario, #Email, #senha, #confirmarSenha, #diaNascimento, #mesNascimento, #anoNascimento, #reCAPTCHA').popup('hide');
-		$('#usuario, #Email, #senha, #confirmarSenha, #diaNascimento, #mesNascimento, #anoNascimento, #reCAPTCHA').popup('destroy');
+			//Resetando popup de campos, fazendo com que não apareçam novamente caso tenham sido preenchidos ou reapareçam caso apagados;
+			//Adicionando classes error nos campos que não passarem pela pré validação;
+			$('#fieldUsuario, #fieldEmail, #fieldSenha, #fieldConfirmarSenha, #fieldDiaNascimento, #fieldMesNascimento, #fieldAnoNascimento').removeClass('error');
+			$('#usuario, #Email, #senha, #confirmarSenha, #diaNascimento, #mesNascimento, #anoNascimento, #reCAPTCHA').popup('hide');
+			$('#usuario, #Email, #senha, #confirmarSenha, #diaNascimento, #mesNascimento, #anoNascimento, #reCAPTCHA').popup('destroy');
 
-		//Pré-validação do campo e-mail, usando regex para que os campos possuam ao menos um "@ algumacoisa.com/.br/.uk/.jp etc";
-		function validarEmail(email) {
-			regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-			return regex.test(email);
-		}
+			//Pré-validação do campo e-mail, usando regex para que os campos possuam ao menos um "@ algumacoisa.com/.br/.uk/.jp etc";
+			function validarEmail(email) {
+				regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+				return regex.test(email);
+			}
 
-		//Pre-validação de idade com um mínimo de 13 anos para poder validar;
-		function validarIdade(diaNascimento, mesNascimento, anoNascimento) {
-			if (anoNascimento > anoAtual - 13) {
-				return false;
-			} else if (anoNascimento < anoAtual - 13) {
+			//Pre-validação de idade com um mínimo de 13 anos para poder validar;
+			function validarIdade(diaNascimento, mesNascimento, anoNascimento) {
+				if (anoNascimento > anoAtual - 13) {
+					return false;
+				} else if (anoNascimento < anoAtual - 13) {
+					return true;
+				}
+
+				if (mesNascimento > mesAtual) {
+					return false;
+				} else if (mesNascimento < mesAtual) {
+					return true;
+				}
+
+				if (diaNascimento > diaAtual) {
+					return false;
+				}
+
 				return true;
 			}
 
-			if (mesNascimento > mesAtual) {
-				return false;
-			} else if (mesNascimento < mesAtual) {
-				return true;
+			//Pré-validação dos campos, exibe alertas caso não passem pela pré-validação;
+			if (!$('#usuario').val()) {
+				$('#usuario').attr('data-content', "Preencha o campo de usuário");
+				$('#fieldUsuario').addClass('error');
+				camposValidos[0] = true;
+			} else if ($('#usuario').val().length > 25) {
+				$('#usuario').attr('data-content', "Preencha o campo de usuário com no máximo 25 caracteres");
+				$('#fieldUsuario').addClass('error');
+				camposValidos[0] = true;
+			} else if ($('#usuario').val().length < 3) {
+				$('#usuario').attr('data-content', "Preencha o campo de usuário com no mínimo 3 caracteres");
+				$('#fieldUsuario').addClass('error');
+				camposValidos[0] = true;
 			}
 
-			if (diaNascimento > diaAtual) {
-				return false;
+			if (!$('#email').val()) {
+				$('#email').attr('data-content', "Preencha o campo de E-mail");
+				$('#fieldEmail').addClass('error');
+				camposValidos[1] = true;
+			} else if ($('#email').val().length > 100) {
+				$('#email').attr('data-content', "Preencha o campo de E-mail com no máximo 100 caracteres");
+				$('#fieldEmail').addClass('error');
+				camposValidos[1] = true;
+			} else if (!validarEmail($('#email').val())) {
+				$('#email').attr('data-content', "Preencha o campo com um E-mail válido");
+				$('#fieldEmail').addClass('error');
+				camposValidos[1] = true;
 			}
 
-			return true;
-		}
+			if (!$('#senha').val()) {
+				$('#senha').attr('data-content', "Preencha o campo de senha");
+				$('#fieldSenha').addClass('error');
+				camposValidos[2] = true;
+			} else if ($('#senha').val().length < 8) {
+				$('#senha').attr('data-content', "Preencha o campo de senha com no mínimo 8 caracteres");
+				$('#fieldSenha').addClass('error');
+				camposValidos[2] = true;
+			}
 
-		//Pré-validação dos campos, exibe alertas caso não passem pela pré-validação;
-		if (!$('#usuario').val() || $('#usuario').val().length > 25 || $('#usuario').val().length < 3) {
-			$('#usuario').popup({on: 'focus'});
-			$('#usuario').popup('show');
-			$('#fieldUsuario').addClass('error');
-			camposValidos = false;
-		}
+			if (!$('#confirmarSenha').val()) {
+				$('#confirmarSenha').attr('data-content', "Repita sua senha");
+				$('#fieldConfirmarSenha').addClass('error');
+				camposValidos[3] = true;
+			} else if ($('#confirmarSenha').val() != $('#senha').val()) {
+				$('#confirmarSenha').attr('data-content', "As senhas digitadas não coincidem");
+				$('#fieldConfirmarSenha').addClass('error');
+				camposValidos[3] = true;
+			}
 
-		if (!$('#email').val() || $('#email').val().length > 100 || !validarEmail($('#email').val())) {
-			$('#email').popup({on: 'focus'});
-			$('#email').popup('show');
-			$('#fieldEmail').addClass('error');
-			camposValidos = false;
-		}
+			if (!$('#anoNascimento').val() || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val()) || $('#anoNascimento').val() <= anoAtual - 100) {
+				$('#fieldAnoNascimento').addClass('error');
+				camposValidos[4] = true;
+			}
 
-		if (!$('#senha').val() || $('#senha').val().length < 8) {
-			$('#senha').popup({on: 'focus'});
-			$('#senha').popup('show');
-			$('#fieldSenha').addClass('error');
-			camposValidos = false;
-		}
+			if (!$('#mesNascimento') || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val())) {
+				$('#fieldMesNascimento').addClass('error');
+				camposValidos[5] = true;
+			}
 
-		if (!$('#confirmarSenha').val() || $('#confirmarSenha').val() != $('#senha').val()) {
-			$('#confirmarSenha').popup({on: 'focus'});
-			$('#confirmarSenha').popup('show');
-			$('#fieldConfirmarSenha').addClass('error');
-			camposValidos = false;
-		}
+			if (!$('#diaNascimento').val() || $('#diaNascimento').val() < 1 || $('#diaNascimento').val() > diasMesMaximo || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val())) {
+				$('#fieldDiaNascimento').addClass('error');
+				camposValidos[6] = true;
+			}
 
-		if (!$('#anoNascimento').val() || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val()) || $('#anoNascimento').val() <= anoAtual - 100) {
-			$('#anoNascimento').popup({on: 'focus'});
-			$('#anoNascimento').popup('show');
-			$('#fieldAnoNascimento').addClass('error');
-			camposValidos = false;
-		}
+			if (!grecaptchaResponse) {
+				camposValidos[7] = true;
+			}
 
-		if (!$('#mesNascimento') || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val())) {
-			$('#mesNascimento').popup({on: 'focus'});
-			$('#mesNascimento').popup('show');
-			$('#fieldMesNascimento').addClass('error');
-			camposValidos = false;
-		}
+			//Verifica quais campos foram setados como true, e adiciona o popup de erro para cada campo q deu erro;
+			for (campos = 0; campos < 8; campos++) {
+				if (camposValidos[campos]) {
+					$('#' + camposNomes[campos]).popup({on: 'focus'});
+					$('#' + camposNomes[campos]).popup('show');
+				}
+			}
 
-		if (!$('#diaNascimento').val() || $('#diaNascimento').val() < 1 || $('#diaNascimento').val() > diasMesMaximo || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val())) {
-			$('#diaNascimento').popup({on: 'focus'});
-			$('#diaNascimento').popup('show');
-			$('#fieldDiaNascimento').addClass('error');
-			camposValidos = false;
-		}
-
-		if (!grecaptchaResponse) {
-			$('#reCAPTCHA').popup({on: 'focus'});
-			$('#reCAPTCHA').popup('show');
-			camposValidos = false;
-		}
-
-		//Envia os dados para a validação;
-		if (camposValidos) {
-			enviarFormulario();
+			//Envia os dados para a validação;
+			if (camposValidos.length < 1) {
+				enviarFormulario();
+			} else {
+				$('#botaoSubmit').removeClass('loading');
+				$('#botaoSubmit').removeClass('disabled');
+			}
 		}
 	});
 
@@ -207,10 +244,18 @@ $(document).ready(function() {
 	function enviarFormulario() {
 		dadosFormulario = $('#formularioRegistro').serialize();
 		$.post('validarRegistro.php', dadosFormulario, function(resultado) {
+			$('#botaoSubmit').removeClass('loading');
 			alert(resultado);
-		});
+			if (resultado != 0) {
+				$('#botaoSubmit').removeClass('disabled');
+				return false;
+			}
+		}) .fail(function() {
+				alert("Tempo de conexão esgotado, tente novamente mais tarde");
+				$('#botaoSubmit').removeClass('loading');
+				$('#botaoSubmit').removeClass('disabled');
+				return false;
+			});
 	}
-
 });
-
 </script>
