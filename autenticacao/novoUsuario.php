@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . "/../definicoes.php";
-require_once __DIR__ . "/../funcoes.php";
+require_once __DIR__ . "/../util/funcoes.php";
 
 if (isset($_SESSION['usuario']['logado']) && $_SESSION['usuario']['logado']) {
 	header('location: /ataqueDivino');
