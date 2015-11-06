@@ -6,6 +6,19 @@
  */
 
 /**
+ * Carrega todas as credenciais necessárias para a execução do Ataque Divino.
+ */
+
+$diretorioPS = __DIR__ . '\ps.json';
+if (file_exists($diretorioPS)) {
+	$def_passes = file_get_contents($diretorioPS);
+	$def_passes = json_decode($def_passes);
+} else {
+	die('Ocorreu um erro ao executar o Ataque Divino: Arquivo PS não encontrado.');
+}
+unset($diretorioPS);
+
+/**
  * Perfil ativo atualmente. Pode ser qualquer um dos definidos no
  * array $conexoes (development ou test).
  */
@@ -37,19 +50,19 @@ $def_sessionName = md5($_SERVER['REMOTE_ADDR'].'atqDvn'.$_SERVER['HTTP_USER_AGEN
  * Conexão com o banco principal.
  */
 $conexoes['ataqueDivino'] = array();
-$conexoes['ataqueDivino']['host'] = 'sql5.freemysqlhosting.net';
-$conexoes['ataqueDivino']['db'] = 'sql592092';
-$conexoes['ataqueDivino']['user'] = 'sql592092';
-$conexoes['ataqueDivino']['pass'] = 'fK1%lB7*';
+$conexoes['ataqueDivino']['host'] = $def_passes->bdAtaqueDivino->host;
+$conexoes['ataqueDivino']['db'] = $def_passes->bdAtaqueDivino->db;
+$conexoes['ataqueDivino']['user'] = $def_passes->bdAtaqueDivino->user;
+$conexoes['ataqueDivino']['pass'] = $def_passes->bdAtaqueDivino->pass;
 
 /**
  * Conexão com o banco de desenvolvimento (development).
  */
 $conexoes['dev'] = array();
-$conexoes['dev']['host'] = '127.0.0.1';
-$conexoes['dev']['db'] = 'ataquedivino';
-$conexoes['dev']['user'] = 'ataquedivino';
-$conexoes['dev']['pass'] = 'zj7dqvKhe4NtG88X';
+$conexoes['dev']['host'] = $def_passes->bdDev->host;
+$conexoes['dev']['db'] = $def_passes->bdDev->db;
+$conexoes['dev']['user'] = $def_passes->bdDev->user;
+$conexoes['dev']['pass'] = $def_passes->bdDev->pass;
 
 setlocale(LC_ALL, 'pt_BR.utf8');
 setlocale(LC_NUMERIC, 'en_US.utf8');
