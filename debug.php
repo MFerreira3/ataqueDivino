@@ -140,9 +140,12 @@ $mensagem['c0a'] = "Nome de usuário inválido";
 $mensagem['c0b'] = "O nome de usuário excede o número máximo de caracteres permitido";
 $mensagem['c0c'] = "O nome de usuário não contém a quantidade mínima de caracteres";
 $mensagem['c0d'] = "O nome de usuário contém caracteres inválidos";
+$mensagem['c0f'] = "Este nome de usuário já está sendo utilizado";
 
 $mensagem['c1a'] = "Nenhum e-mail foi especificado";
 $mensagem['c1b'] = "O e-mail excede o número máximo de caracteres permitido";
+$mensagem['c1c'] = "Este endereço de e-mail já está sendo utilizado";
+$mensagem['c1d'] = "Não foi possível validar o e-mail especificado";
 
 $mensagem['c2a'] = "Nenhuma senha foi especificada";
 $mensagem['c2b'] = "A senha excede o número máximo de caracteres permitido";
