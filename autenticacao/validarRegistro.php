@@ -3,6 +3,8 @@ $def_imprimirHTML = false;
 require_once "../definicoes.php";
 require_once "../restricaoAjax.php";
 
+// FIXME: Alterar esquemas de criptografia utilizadas até então.
+
 const SECRET_KEY = "6LchDBATAAAAALY7KMB15GjZukkd3wYj-oZmboJv"; // Secret key do google reCAPTCHA
 
 // Impede que uma pessoa já logada realize a criação de uma nova conta.
@@ -15,6 +17,7 @@ if (!empty($_SESSION['usuario'])) {
 * 2. usuario ultrapassa o limite de caracteres?
 * 3. usuario não contém caracteres suficiente?
 * 4. usuario não contém caracteres inválidos?
+* 5. usuario já está em uso?
 */
 if (empty($_POST['usuario']) || !is_string($_POST['usuario'])) {
 	retornarResultado('c0a');
@@ -24,16 +27,21 @@ if (empty($_POST['usuario']) || !is_string($_POST['usuario'])) {
 	retornarResultado('c0c');
 } else if (preg_replace("/[^a-zA-Z0-9\/_-]/", "", $_POST['usuario']) !== $_POST['usuario']) {
 	retornarResultado('c0d');
+} else if (Usuario::usuarioExistente($_POST['usuario'])) {
+	retornarResultado('c0f');
 }
 
 /* Validações para o campo email
 * 1. email não foi preenchido, não é string ou não é considerado válido?
 * 2. email ultrapassa o limite de caracteres?
+* 3. email já está sendo utilizado?
 */
 if (empty($_POST['email']) || !is_string($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
 	retornarResultado('c1a');
 } else if (strlen($_POST['email']) > 100) {
 	retornarResultado('c1b');
+} else if (Usuario::usuarioExistente(null, $_POST['email'])) {
+	retornarResultado('c1c');
 }
 
 /* Validações para o campo senha
@@ -70,7 +78,7 @@ if (empty($_POST['diaNascimento']) || empty($_POST['mesNascimento']) || empty($_
 
 /* Validações do reCAPTCHA
 * 1. O g-response foi enviado?
-* 2. A verificação foi validada pelo google?
+* 2. A verificação foi validada pelo Google?
 */
 if (empty($_POST['g-response'])) {
 	retornarResultado('c4a');
@@ -82,6 +90,38 @@ if (empty($_POST['g-response'])) {
 		retornarResultado('c4b');
 	}
 }
+
+// Gera um código de validação para o usuário.
+$codValidacao = md5($_POST['usuario'] . date("Y-m-d H:i:s"));
+
+// Construção da mensagem de confirmação.
+require_once "../util/email.php";
+
+$titulo = <<<END
+			Seja bem vindo ao Ataque Divino!
+END;
+
+$corpo = <<<END
+			Olá $_POST[usuario], <br />
+			para começar a jogar você só precisa validar sua nova conta <a href="$def_passes->urlRaiz/contas/validarConta.php?tokenValidacao=$codValidacao">clicando aqui</a>.<br />
+			Ataque Divino.
+END;
+
+// Envia o e-mail e retorna erro caso não seja possível.
+if (!enviarEmail($titulo, $corpo, $_POST['email'])) {
+	retornarResultado('c1d');
+}
+
+// Inicia o processo de gravação.
+$usuario = new Usuario();
+$usuario->usuario = $_POST['usuario'];
+$usuario->email = $_POST['email'];
+$usuario->senha = md5($_POST['senha']);
+$usuario->dataNascimento = $_POST['anoNascimento'] . '-' . $_POST['mesNascimento'] . '-' . $_POST['diaNascimento'];
+$usuario->validado = "0";
+$usuario->dataCriacao = date("Y-m-d");
+$usuario->codValidacao = $codValidacao;
+$usuario->store();
 
 // Se nenhum dado for considerado inválido, será enviado um código de sucesso.
 retornarResultado(0);
