@@ -133,6 +133,9 @@ END;
 */
 function notificacoes($indice) {
 
+# Sucessos
+$mensagem[0] = "Operação realizada com sucesso.";
+
 # Erros
 
 // Sessão de criação de novos usuários (C).
