@@ -127,7 +127,7 @@ $usuario->store();
 retornarResultado(0);
 
 function retornarResultado($resultado = 0) {
-	$retorno = array('resultado' => $resultado);
+	$retorno = array('resultado' => $resultado, 'notificacao' => notificacoes($resultado));
 	echo json_encode($retorno);
 	exit;
 }
