@@ -1,9 +1,18 @@
 <?php
+/**
+ * Recebe dados enviados por POST e realiza a verificação e criação da nova conta.a
+ *
+ * Valores recebidos:
+ * usuario, email, senha, anoNascimento, mesNascimento, diaNascimento e g-response.
+ *
+ * Valores retornados:
+ * mixed	resultado 	Contém o codigo identificador do resultado
+ * 						da operação.
+ * string	notificacao	Contém a notificação correspondente ao resultado.
+ */
 $def_imprimirHTML = false;
 require_once "../definicoes.php";
 require_once "../restricaoAjax.php";
-
-// FIXME: Alterar esquemas de criptografia utilizadas até então.
 
 const SECRET_KEY = "6LchDBATAAAAALY7KMB15GjZukkd3wYj-oZmboJv"; // Secret key do google reCAPTCHA
 
@@ -91,8 +100,11 @@ if (empty($_POST['g-response'])) {
 	}
 }
 
+// Gera um hash com salt para a senha.
+$senha = password_hash($_POST['senha'], PASSWORD_DEFAULT, array('cost' => $def_passes->costPadrao));
+
 // Gera um código de validação para o usuário.
-$codValidacao = md5($_POST['usuario'] . date("Y-m-d H:i:s"));
+$codConfirmacao = base64_encode(openssl_random_pseudo_bytes(8));
 
 // Construção da mensagem de confirmação.
 require_once "../util/email.php";
@@ -103,12 +115,12 @@ END;
 
 $corpo = <<<END
 			Olá $_POST[usuario], <br />
-			para começar a jogar você só precisa validar sua nova conta <a href="$def_passes->urlRaiz/contas/validarConta.php?tokenValidacao=$codValidacao">clicando aqui</a>.<br />
+			para começar a jogar você só precisa validar sua nova conta <a href="$def_passes->urlRaiz/contas/validarConta.php?tokenValidacao=$codConfirmacao">clicando aqui</a>.<br />
 			Ataque Divino.
 END;
 
 // Envia o e-mail e retorna erro caso não seja possível.
-if (!enviarEmail($titulo, $corpo, $_POST['email'])) {
+if (enviarEmail($titulo, $corpo, $_POST['email'])) {
 	retornarResultado('c1d');
 }
 
@@ -116,11 +128,11 @@ if (!enviarEmail($titulo, $corpo, $_POST['email'])) {
 $usuario = new Usuario();
 $usuario->usuario = $_POST['usuario'];
 $usuario->email = $_POST['email'];
-$usuario->senha = md5($_POST['senha']);
+$usuario->senha = base64_encode($senha);
 $usuario->dataNascimento = $_POST['anoNascimento'] . '-' . $_POST['mesNascimento'] . '-' . $_POST['diaNascimento'];
 $usuario->validado = "0";
 $usuario->dataCriacao = date("Y-m-d");
-$usuario->codValidacao = $codValidacao;
+$usuario->codConfirmacao = $codConfirmacao;
 $usuario->store();
 
 // Se nenhum dado for considerado inválido, será enviado um código de sucesso.
