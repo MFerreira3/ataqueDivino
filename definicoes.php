@@ -1,4 +1,8 @@
 <?php
+/**
+ * Arquivo responsável por armazenar definições e realizar operações
+ * que serão utilizadas em praticamente todas as páginas do Ataque Divino.
+ */
 header('Content-type: text/html; charset=UTF-8');
 
 require_once __DIR__ . '/autoload.php';
