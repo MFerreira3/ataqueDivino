@@ -8,7 +8,7 @@
 /**
  * Carrega todas as credenciais necessárias para a execução do Ataque Divino.
  */
-$diretorioPS = __DIR__ . '\ps.json';
+$diretorioPS = __DIR__ . '/ps.json';
 if (file_exists($diretorioPS)) {
 	$def_passes = file_get_contents($diretorioPS);
 	$def_passes = json_decode($def_passes);
