@@ -1,8 +1,8 @@
 <?php
 /**
- * Recebe um valor de mês e retorna o seu respectivo nome;
- * @param	integer 	$numeroMes	Variável de valor para o mês;
- * @return	string 		Retorna o nome do mês;
+ * Recebe um valor de mês e retorna o seu respectivo nome.
+ * @param	integer 	$numeroMes	Variável de valor para o mês.
+ * @return	string 		Retorna o nome do mês.
  */
 function mesNome($numeroMes) {
 	$mes = array(
@@ -25,11 +25,13 @@ function mesNome($numeroMes) {
 ?>
 
 <script>
+<?php
 /**
- * Recebe um mês e retorna a quantia de dias máximo para tal;
- * @param	integer	$numeroMes	Váriavel de valor para o mês;
- * @return	integer	Retorna a quantia máxima de dias para o mês;
+ * Recebe um mês e retorna a quantia de dias máximo para tal.
+ * @param	integer	$numeroMes	Váriavel de valor para o mês.
+ * @return	integer	Retorna a quantia máxima de dias para o mês.
  */
+?>
 function mesDiaMaximo(numeroMes) {
 	mesParOuImpar = numeroMes % 2;
 
@@ -45,5 +47,4 @@ function mesDiaMaximo(numeroMes) {
 		return 30;
 	}
 }
-
 </script>
