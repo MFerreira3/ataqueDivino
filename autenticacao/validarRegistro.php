@@ -34,7 +34,7 @@ if (empty($_POST['usuario']) || !is_string($_POST['usuario'])) {
 	retornarResultado('c0b');
 } else if (strlen($_POST['usuario']) < 3) {
 	retornarResultado('c0c');
-} else if (preg_replace("/[^a-zA-Z0-9\/_-]/", "", $_POST['usuario']) !== $_POST['usuario']) {
+} else if (preg_replace("/\b[_\-]+|[^a-zA-Z0-9_\-]+/", "", $_POST['usuario']) !== $_POST['usuario']) {
 	retornarResultado('c0d');
 } else if (Usuario::usuarioExistente($_POST['usuario'])) {
 	retornarResultado('c0f');
