@@ -18,7 +18,7 @@ do {
 
 // Registra o cost e armazena no ps.json.
 $def_passes->costPadrao = $cost;
-$diretorioPS = __DIR__ . '\ps.json';
+$diretorioPS = __DIR__ . '/ps.json';
 file_put_contents ($diretorioPS, json_encode($def_passes));
 
 ?>
