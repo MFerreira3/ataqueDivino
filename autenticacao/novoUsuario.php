@@ -158,78 +158,76 @@ $(document).ready(function() {
 			}
 
 			// Pré-validação dos campos, exibe alertas caso não passem pela pré-validação;
+			// Verifica se o campo de usuário esta preenchido, tem menos do que 25 caraceteres e mais do que 3 caracteres.
 			if (!$('#usuario').val()) {
 				$('#usuario').attr('data-content', "Preencha o campo de usuário");
-				$('#fieldUsuario').addClass('error');
 				camposInvalidos[0] = true;
 			} else if ($('#usuario').val().length > 25) {
 				$('#usuario').attr('data-content', "Preencha o campo de usuário com no máximo 25 caracteres");
-				$('#fieldUsuario').addClass('error');
 				camposInvalidos[0] = true;
 			} else if ($('#usuario').val().length < 3) {
 				$('#usuario').attr('data-content', "Preencha o campo de usuário com no mínimo 3 caracteres");
-				$('#fieldUsuario').addClass('error');
 				camposInvalidos[0] = true;
 			}
 
+			// Verifica se o campo de e-mail está preenchido, tem menos do que 100 caracteres e se eles possuem os caracteres normais de um email (algumacoisa@algumacoisa.com/uk etc) usando a função validarEmail
 			if (!$('#email').val()) {
 				$('#email').attr('data-content', "Preencha o campo de E-mail");
-				$('#fieldEmail').addClass('error');
 				camposInvalidos[1] = true;
 			} else if ($('#email').val().length > 100) {
 				$('#email').attr('data-content', "Preencha o campo de E-mail com no máximo 100 caracteres");
-				$('#fieldEmail').addClass('error');
 				camposInvalidos[1] = true;
 			} else if (!validarEmail($('#email').val())) {
 				$('#email').attr('data-content', "Preencha o campo com um E-mail válido");
-				$('#fieldEmail').addClass('error');
 				camposInvalidos[1] = true;
 			}
 
+			// Verifica se o campo de senha está preenchido e tem mais do que 8 caracteres
 			if (!$('#senha').val()) {
 				$('#senha').attr('data-content', "Preencha o campo de senha");
-				$('#fieldSenha').addClass('error');
 				camposInvalidos[2] = true;
 			} else if ($('#senha').val().length < 8) {
 				$('#senha').attr('data-content', "Preencha o campo de senha com no mínimo 8 caracteres");
-				$('#fieldSenha').addClass('error');
 				camposInvalidos[2] = true;
 			}
 
+			// Verifica se o campo de confirmar senha está preenchido e é igual ao que foi escrito no campo de senha
 			if (!$('#confirmarSenha').val()) {
 				$('#confirmarSenha').attr('data-content', "Repita sua senha");
-				$('#fieldConfirmarSenha').addClass('error');
 				camposInvalidos[3] = true;
 			} else if ($('#confirmarSenha').val() != $('#senha').val()) {
 				$('#confirmarSenha').attr('data-content', "As senhas digitadas não coincidem");
-				$('#fieldConfirmarSenha').addClass('error');
 				camposInvalidos[3] = true;
 			}
 
+			// Verifica se o campo de ano de nascimento foi preenchido e se o total dos campos ano, mês e dia dão pelo menos 13 anos de vida e menos do que 100 anos
 			if (!$('#anoNascimento').val() || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val()) || $('#anoNascimento').val() <= anoAtual - 100) {
-				$('#fieldAnoNascimento').addClass('error');
 				camposInvalidos[4] = true;
 			}
 
+			// Verifica se o total dos campos ano, mês e dia dão pelo menos 13 anos de vida e menos do que 100 anos
 			if (!$('#mesNascimento') || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val())) {
-				$('#fieldMesNascimento').addClass('error');
 				camposInvalidos[5] = true;
 			}
 
+			// Verifica se o campo de dia de nascimento foi preenchido e se o total dos campos ano, mês e dia dão pelo menos 13 anos de vida e menos do que 100 anos
 			if (!$('#diaNascimento').val() || $('#diaNascimento').val() < 1 || $('#diaNascimento').val() > diasMesMaximo || !validarIdade($('#diaNascimento').val(), $('#mesNascimento').val(), $('#anoNascimento').val())) {
-				$('#fieldDiaNascimento').addClass('error');
 				camposInvalidos[6] = true;
 			}
 
+			// Verifica se o reCAPTCHA foi preenchido
 			if (!grecaptchaResponse) {
 				camposInvalidos[7] = true;
 			}
 
-			// Verifica quais campos foram setados como true, e adiciona o popup de erro para cada campo que deu erro.
-			for (campos = 0; campos < 8; campos++) {
-				if (camposInvalidos[campos]) {
-					$('#' + camposNomes[campos]).popup({on: 'focus'});
-					$('#' + camposNomes[campos]).popup('show');
+			// Verifica quais campos foram setados como true, e adiciona o popup de erro para cada campo que não foi validado; Adiciona class error no campo field.
+			// FIXME: Toda vez que é inicializada a função do botão Regristrar, são criados novos DIVs para cada popup no código fonte.
+			for (indices = 0; indices < 8; indices++) {
+				if (camposInvalidos[indices]) {
+					idField = "#field" + camposNomes[indices].substr(0, 1).toUpperCase() + camposNomes[indices].substr(1); // Utiliza os valores do camposInvalidos para se referir aos IDs dos fields.
+					$(idField).addClass('error');
+					$('#' + camposNomes[indices]).popup({on: 'focus'});
+					$('#' + camposNomes[indices]).popup('show');
 				}
 			}
 
