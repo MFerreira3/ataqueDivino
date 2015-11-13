@@ -162,6 +162,8 @@ $mensagem['c3c'] = "Idade insuficiente";
 $mensagem['c4a'] = "g-response não informado";
 $mensagem['c4b'] = "Conexão recusada pelo reCAPTCHA";
 
+$mensagem['c5a'] = "Código de confirmação inválido";
+
 // Sessão de erros genéricos (G).
 $mensagem['g0a'] = "Operação bloqueada pelo servidor";
 
