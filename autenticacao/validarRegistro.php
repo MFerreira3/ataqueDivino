@@ -100,11 +100,19 @@ if (empty($_POST['g-response'])) {
 	}
 }
 
-// Gera um hash com salt para a senha.
-$senha = password_hash($_POST['senha'], PASSWORD_DEFAULT, array('cost' => $def_passes->costPadrao));
 
-// Gera um código de validação para o usuário.
-$codConfirmacao = base64_encode(openssl_random_pseudo_bytes(8));
+/* O laço abaixo gera um novo hash para a senha e, apesar das chances disso acontecer serem remotas, verifica
+se o mesmo já está sendo utilizado, em caso de repetição, ele irá gerar um novo hash */
+do {
+    $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT, array('cost' => $def_passes->costPadrao));
+} while (Usuario::hashExistente($senha));
+
+
+// Realiza a mesma operação de verificação feita na senha para gerar um codConfirmação
+do {
+    $codConfirmacao = base64_encode(openssl_random_pseudo_bytes(8));
+} while (Usuario::codConfirmacaoExistente($codConfirmacao));
+
 
 // Construção da mensagem de confirmação.
 require_once "../util/email.php";
@@ -115,7 +123,7 @@ END;
 
 $corpo = <<<END
 			Olá $_POST[usuario], <br />
-			para começar a jogar você só precisa validar sua nova conta <a href="$def_passes->urlRaiz/contas/validarConta.php?tokenValidacao=$codConfirmacao">clicando aqui</a>.<br />
+			para começar a jogar você só precisa validar sua nova conta <a href="$def_passes->urlRaiz$url/contas/confirmarConta.php?acc=$codConfirmacao">clicando aqui</a>.<br />
 			Ataque Divino.
 END;
 
@@ -130,7 +138,7 @@ $usuario->usuario = $_POST['usuario'];
 $usuario->email = $_POST['email'];
 $usuario->senha = base64_encode($senha);
 $usuario->dataNascimento = $_POST['anoNascimento'] . '-' . $_POST['mesNascimento'] . '-' . $_POST['diaNascimento'];
-$usuario->validado = "0";
+$usuario->confirmado = "0";
 $usuario->dataCriacao = date("Y-m-d");
 $usuario->codConfirmacao = $codConfirmacao;
 $usuario->store();
