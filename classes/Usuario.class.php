@@ -58,7 +58,7 @@ class Usuario extends Record {
 			// Remove o codConfirmacao usado e adiciona 1 no campo confirmado do usuário encontrado.
 			$usuario = new Usuario($usuario[0]->codUsuario);
 			$usuario->codConfirmacao = "NULL";
-			$usuario->confirmado = 1;
+			$usuario->confirmado = "1";
 			$usuario->store();
 
 			return 0;
