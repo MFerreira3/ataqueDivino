@@ -2,7 +2,6 @@
 require_once __DIR__ . "/../definicoes.php";
 require_once __DIR__ . "/PHPMailer/PHPMailerAutoload.php";
 
-
 /**
  * Realiza o envio de uma mensagem eletrônica
  * a uma lista de endereços de email.
@@ -16,6 +15,7 @@ function enviarEmail($assunto, $corpo, $destinatarios) {
 	global $def_passes;
 
 	$mail = new PHPMailer();
+	$mail->CharSet = "UTF-8";
 	$mail->IsSMTP();
 	$mail->SMTPAuth = true;
 	$mail->SMTPSecure = 'ssl';
