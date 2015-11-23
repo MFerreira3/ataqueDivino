@@ -20,7 +20,7 @@ function enviarEmail($assunto, $corpo, $destinatarios) {
 	$mail->SMTPAuth = true;
 	$mail->SMTPSecure = 'ssl';
 	$mail->Host = "smtp.gmail.com";
-	$mail->Port = 465;
+	$mail->Port = 587;
 	$mail->IsHTML(true);
 	$mail->Username = $def_passes->email->username;
 	$mail->Password = $def_passes->email->password;
