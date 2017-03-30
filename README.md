@@ -1,8 +1,8 @@
 # ataqueDivino
 
-![Index](http://i.imgur.com/4XKbubO.jpg)/
+![Index](http://i.imgur.com/4XKbubO.jpg)
 
 ---
 
-![Cadastro](http://i.imgur.com/FfNxNqG.jpg)/
+![Cadastro](http://i.imgur.com/FfNxNqG.jpg)
 
